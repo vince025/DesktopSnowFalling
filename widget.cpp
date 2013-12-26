@@ -5,6 +5,7 @@
 #include <QTransform>
 #include <QDebug>
 #include <time.h>
+#include <QCryptographicHash>
 
 #ifdef Q_OS_LINUX
 #include <X11/extensions/shape.h>
@@ -52,15 +53,16 @@ Widget::Widget(QWidget *parent) :
 			pixmapList[i].append(pixmapList[i].at(j).transformed(transform));
 	}
 
-	qDebug()<<"alloced pixmapList";
 	for(i = 0; i < MAX_PICS; i++)
 	{
 		snow[i] = new SnowWidget(this, frame);
 		snow[i]->setGeometry(-128, -128, 64, 64);
+		snow[i]->SetSpeed(3, 8);
+		snow[i]->SetEdges(0, this->width(), 0, this->height());
 		//snow[i]->show();
 	}
 
-	swing = new Swing(this, 60, 20);
+	swing = new Swing(this, 120, 60);
 	startTimer(TIMEOUT_TIME);
 }
 
@@ -82,7 +84,6 @@ void Widget::timerEvent(QTimerEvent *e)
 		{
 			--initLabel;
 			snow[initLabel]->move(0, -snow[initLabel]->height());
-			qDebug()<<"Init snow["+QString::number(initLabel)+"]";
 		}
 	}
 
@@ -91,14 +92,6 @@ void Widget::timerEvent(QTimerEvent *e)
 
 	//action flow down
 	FlashSnow();
-}
-
-void Widget::SetLabelBG(const QPixmap &pixmap, QLabel *label)
-{
-	if(!label || pixmap.isNull()) return;
-	QPixmap map = pixmap.scaled(label->size());
-	if(map.isNull()) return;
-	label->setPixmap(map);
 }
 
 void Widget::FlashSnow()
@@ -112,45 +105,19 @@ void Widget::FlashSnow()
 			//repaint label's backgroud
 			int imgId = (qrand()%MAX_PIXMAP);
 			//resize label
-			int size = (qrand()%48)+16;
+			int size = (qrand()%(SnowSizeMax-SnowSizeMin))+SnowSizeMin;
 			snow[i]->SetPixmapToLabel(pixmapList[imgId], size, size);
 
 			//init place
 			int x = (qrand()%this->width());
 			snow[i]->move(x, 10-snow[i]->height());
 		}
-		else if(snow[i]->x() == -128) continue;
+		else if(snow[i]->x() == -128) continue;  //初始化为-128
 		else
 		{
 			//snow flow down
-			SnowFlowDown(snow[i]);
+			snow[i]->SetDirection(swing->GetDirection());
+			snow[i]->UpdateSnow(true);
 		}
 	}
-}
-
-void Widget::SnowFlowDown(SnowWidget *widget, bool bRandom)
-{
-	int downX, downY;
-	if(!widget) return;
-
-	//Y
-	downY = widget->y()+5;
-	if(bRandom)
-	{
-		downY = widget->y()+qrand()%(this->height() - widget->y());
-	}
-	if(downY > (this->height())) downY = -widget->height();
-
-	//X
-	if(swing->GetDirection() == Swing::LEFT_DIRECTION)
-		downX = widget->x() - 5;
-	else if(swing->GetDirection() == Swing::RIGHT_DIRECTION)
-		downX = widget->x() + 5;
-	else
-		downX = widget->x();
-	if(downX < -widget->width()) downX = this->width();
-	if(downX > this->width()) downX = -widget->width();
-
-	widget->move(downX, downY);
-	widget->SwapNextImageToShow();
 }

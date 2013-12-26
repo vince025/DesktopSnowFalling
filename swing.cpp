@@ -1,4 +1,5 @@
 #include "swing.h"
+#include <time.h>
 
 Swing::Swing(QObject *parent, unsigned int strongMax, unsigned int strongMin) :
 	QObject(parent)
@@ -27,6 +28,7 @@ void Swing::Update()
 
 void Swing::RandDirection()
 {
+	qsrand(::time(NULL)+Strong);
 	Direction = qrand()%5;
 	Strong = qrand()%(StrongMax-StrongMin) + StrongMin;
 	StrongUp = 0;

@@ -12,10 +12,10 @@ public:
 	int GetDirection();
 
 	static const int NO_DIRECTION = 0;
-	static const int LEFT_DIRECTION = 0;
-	static const int RIGHT_DIRECTION = 0;
-	static const int UP_DIRECTION = 0;
-	static const int DOWN_DIRECTION = 0;
+	static const int LEFT_DIRECTION = 1;
+	static const int RIGHT_DIRECTION = 2;
+	static const int UP_DIRECTION = 3;
+	static const int DOWN_DIRECTION = 4;
 	
 signals:
 	

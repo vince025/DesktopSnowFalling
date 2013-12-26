@@ -6,12 +6,12 @@
 #include <QPixmap>
 #include "snowwidget.h"
 #include "swing.h"
-
+/*
 #define WINDOW_OPACITY		0.5
 #define TIMEOUT_TIME		150
 #define MAX_PIXMAP			11
 #define MAX_PICS			30
-
+*/
 namespace Ui {
 class Widget;
 }
@@ -24,10 +24,14 @@ public:
 	explicit Widget(QWidget *parent = 0);
 	~Widget();
 
-	static void SetLabelBG(const QPixmap &pixmap, QLabel *label);
+	static const qreal WINDOW_OPACITY = 0.5;
+	static const int TIMEOUT_TIME = 150;
+	static const int MAX_PIXMAP = 11;
+	static const int MAX_PICS = 100;
+	static const int SnowSizeMax = 64;
+	static const int SnowSizeMin = 16;
 	
 protected:
-	void SnowFlowDown(SnowWidget *widget, bool bRandom = false);
 
 protected slots:
 	void timerEvent(QTimerEvent *e);
