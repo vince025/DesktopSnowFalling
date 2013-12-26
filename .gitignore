@@ -19,3 +19,5 @@ qrc_*.cpp
 Makefile
 Makefile.*
 *-build-*
+debug/*
+release/*
