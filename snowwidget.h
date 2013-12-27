@@ -4,9 +4,8 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPixmap>
+#include <QList>
 #include <QSize>
-
-#define MAX_IMG_NUM	2
 
 namespace Ui {
 class SnowWidget;
@@ -17,11 +16,10 @@ class SnowWidget : public QWidget
 	Q_OBJECT
 	
 public:
-	explicit SnowWidget(QWidget *parent = 0, int imgCount = 2);
+	explicit SnowWidget(QWidget *parent = 0);
 	~SnowWidget();
 
-	void SetPixmapToLabel(const QList<QPixmap> &pixmapList, const QSize &pixmapSize);
-	void SetPixmapToLabel(const QList<QPixmap> &pixmapList, const int width, const int height);
+	void SetPixmapToLabel(const QList<QPixmap> *pixmapList, const unsigned int width, const unsigned int height);
 	int GetDeadLine();
 	void SetDeadLine(int deadLine);
 	void SetSpeed(int min, int max);
@@ -32,10 +30,13 @@ public slots:
 	void SwapImageToShow(int index);
 	void SwapNextImageToShow();
 	void UpdateSnow(bool bStore = false);
+
+protected:
+	void paintEvent(QPaintEvent *e);
 	
 private:
 	Ui::SnowWidget *ui;
-	QLabel **label;
+	const QList<QPixmap> *pmList;
 	int ImageCount;
 	int ShowIndex, LastShowIndex;
 	int DeadLine;

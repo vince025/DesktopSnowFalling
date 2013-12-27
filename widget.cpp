@@ -55,7 +55,7 @@ Widget::Widget(QWidget *parent) :
 
 	for(i = 0; i < MAX_PICS; i++)
 	{
-		snow[i] = new SnowWidget(this, frame);
+		snow[i] = new SnowWidget(this);
 		snow[i]->setGeometry(-128, -128, 64, 64);
 		snow[i]->SetSpeed(3, 8);
 		snow[i]->SetEdges(0, this->width(), 0, this->height());
@@ -106,7 +106,8 @@ void Widget::FlashSnow()
 			int imgId = (qrand()%MAX_PIXMAP);
 			//resize label
 			int size = (qrand()%(SnowSizeMax-SnowSizeMin))+SnowSizeMin;
-			snow[i]->SetPixmapToLabel(pixmapList[imgId], size, size);
+			snow[i]->SetPixmapToLabel(&(pixmapList[imgId]), size, size);
+			//qDebug()<<"init "<<QString::number(i);
 
 			//init place
 			int x = (qrand()%this->width());

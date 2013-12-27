@@ -24,7 +24,7 @@ public:
 	explicit Widget(QWidget *parent = 0);
 	~Widget();
 
-	static const qreal WINDOW_OPACITY = 0.5;
+	static const qreal WINDOW_OPACITY = 1;
 	static const int TIMEOUT_TIME = 150;
 	static const int MAX_PIXMAP = 11;
 	static const int MAX_PICS = 100;

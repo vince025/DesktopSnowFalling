@@ -29,8 +29,16 @@ void Swing::Update()
 void Swing::RandDirection()
 {
 	qsrand(::time(NULL)+Strong);
-	Direction = qrand()%5;
-	Strong = qrand()%(StrongMax-StrongMin) + StrongMin;
+	if(Direction != NO_DIRECTION)
+	{
+		Direction = NO_DIRECTION;
+		Strong = StrongMin;
+	}
+	else
+	{
+		Direction = qrand()%5;
+		Strong = qrand()%(StrongMax-StrongMin) + StrongMin;
+	}
 	StrongUp = 0;
 	StrongDown = Strong;
 }
