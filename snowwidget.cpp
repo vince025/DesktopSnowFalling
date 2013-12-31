@@ -69,6 +69,7 @@ void SnowWidget::SetEdges(int left, int right, int top, int bottom)
 
 void SnowWidget::SwapImageToShow(int index)
 {
+	if(ImageCount <= 0) return;
 	ShowIndex = index % ImageCount; //自动循环,防止越界
 	label[ShowIndex]->show();
 	label[LastShowIndex]->hide();

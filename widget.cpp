@@ -62,7 +62,7 @@ Widget::Widget(QWidget *parent) :
 		//snow[i]->show();
 	}
 
-	swing = new Swing(this, 120, 60);
+	swing = new Swing(this, 120, 60, 200);
 	startTimer(TIMEOUT_TIME);
 }
 
@@ -86,9 +86,6 @@ void Widget::timerEvent(QTimerEvent *e)
 			snow[initLabel]->move(0, -snow[initLabel]->height());
 		}
 	}
-
-	//swing
-	swing->Update();
 
 	//action flow down
 	FlashSnow();

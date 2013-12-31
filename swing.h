@@ -7,7 +7,7 @@ class Swing : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Swing(QObject *parent = 0, unsigned int strongMax = 20, unsigned int strongMin = 0);
+	explicit Swing(QObject *parent = 0, unsigned int strongMax = 20, unsigned int strongMin = 0, unsigned int timeout = 100);
 
 	int GetDirection();
 
@@ -25,6 +25,7 @@ public slots:
 protected:
 	void RandDirection();
 	void Process();
+	void timerEvent(QTimerEvent *e);
 
 private:
 	int Direction;
