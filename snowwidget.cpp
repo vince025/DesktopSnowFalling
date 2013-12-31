@@ -56,7 +56,7 @@ void SnowWidget::SetSpeed(int min, int max)
 	if(max < 0) max = 5;
 	MinSpeed = min;
 	MaxSpeed = max;
-	incX = MinSpeed + qrand()%(MaxSpeed-MinSpeed);
+	//incX = MinSpeed + qrand()%(MaxSpeed-MinSpeed);
 	incY = MinSpeed + qrand()%(MaxSpeed-MinSpeed);
 }
 
@@ -134,9 +134,23 @@ void SnowWidget::UpdateSnow(bool bStore)
 	downY = this->y();
 	//X
 	if(Direction == Swing::LEFT_DIRECTION)
-		downX -= incX;
-	else if(Direction == Swing::RIGHT_DIRECTION)
+	{
+		incX--;
+		if(incX < -MaxSpeed) incX = -MaxSpeed;
 		downX += incX;
+	}
+	else if(Direction == Swing::RIGHT_DIRECTION)
+	{
+		incX++;
+		if(incX > MaxSpeed) incX = MaxSpeed;
+		downX += incX;
+	}
+	else
+	{
+		if(incX < 0) incX++;
+		if(incX > 0) incX--;
+		downX += incX;
+	}
 	if(downX <= -this->width()) downX = RightEdge;
 	if(downX >= RightEdge) downX = -this->width();
 
