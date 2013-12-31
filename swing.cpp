@@ -18,6 +18,7 @@ int Swing::GetDirection()
 
 void Swing::Update()
 {
+	//如果持久度为0, 重新选方向
 	if(Strong == 0)
 	{
 		RandDirection();
@@ -26,6 +27,7 @@ void Swing::Update()
 	Process();
 }
 
+//随机生成方向和持久度
 void Swing::RandDirection()
 {
 	qsrand(::time(NULL)+Strong);
@@ -43,6 +45,7 @@ void Swing::RandDirection()
 	StrongDown = Strong;
 }
 
+//某个方向的持续过程, 当StrongUp到达Strong值, 就重新选方向.
 void Swing::Process()
 {
 	if(++StrongUp >= Strong)

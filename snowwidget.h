@@ -33,17 +33,18 @@ public slots:
 
 protected:
 	void paintEvent(QPaintEvent *e);
+	void timerEvent(QTimerEvent *e);
 	
 private:
 	Ui::SnowWidget *ui;
-	const QList<QPixmap> *pmList;
-	int ImageCount;
-	int ShowIndex, LastShowIndex;
-	int DeadLine;
-	int MinSpeed, MaxSpeed;
-	int incX, incY;
-	int Direction;
-	int LeftEdge, RightEdge, TopEdge, BottomEdge;
+	const QList<QPixmap> *pmList; //图片List指针
+	int ImageCount; //图片总数
+	int ShowIndex, LastShowIndex; //当前显示的图片下标和上一个图片的下标
+	int DeadLine; //是否进入堆积区域
+	int MinSpeed, MaxSpeed; //移动的最大/小像素
+	int incX, incY; //每次移动的X/Y的像素
+	int Direction; //方向
+	int LeftEdge, RightEdge, TopEdge, BottomEdge; //雪花飘动的范围
 };
 
 #endif // SNOWWIDGET_H

@@ -23,14 +23,14 @@ public slots:
 	void Update();
 	
 protected:
-	void RandDirection();
-	void Process();
+	void RandDirection(); //随机生成方向和持久度
+	void Process(); //方向持续过程处理
 
 private:
-	int Direction;
-	unsigned int Strong;
-	unsigned int StrongMin, StrongMax;
-	unsigned int StrongUp, StrongDown;
+	int Direction; //方向, 取值上面的静态值
+	unsigned int Strong; //持久度
+	unsigned int StrongMin, StrongMax; //持久度范围
+	unsigned int StrongUp, StrongDown; //实现持久度的辅助变量
 };
 
 #endif // SWING_H

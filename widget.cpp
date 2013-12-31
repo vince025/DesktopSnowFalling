@@ -30,13 +30,15 @@ Widget::Widget(QWidget *parent) :
 	setWindowState(Qt::WindowNoState //不激活
 				   |Qt::WindowFullScreen //全屏
 				   );
-	setFocusPolicy(Qt::NoFocus);
-	setWindowOpacity(WINDOW_OPACITY);
+	setFocusPolicy(Qt::NoFocus); //窗口永远不获取焦点
+	setWindowOpacity(WINDOW_OPACITY); //设置窗口透明度
 #ifdef Q_OS_LINUX
+	//linux下实现鼠标穿透
 	XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0,
 								0, NULL, 0, ShapeSet, YXBanded);
 #endif
 #ifdef Q_OS_WIN
+	//windows下实现鼠标穿透
 	SetWindowLong(winId(), GWL_EXSTYLE, GetWindowLong(winId(), GWL_EXSTYLE) |
 						WS_EX_TRANSPARENT | WS_EX_LAYERED);
 #endif
@@ -48,12 +50,12 @@ Widget::Widget(QWidget *parent) :
 	for(i = 0; i < MAX_PIXMAP; i++)
 	{
 		pixmapList[i].clear();
-		pixmapList[i].append(QPixmap(":/PixmapRes/"+QString::number(i)+".png"));
+		pixmapList[i].append(QPixmap(":/PixmapRes/"+QString::number(i)+".png")); //加载图片
 		for(j = 0; j < frame-1; j++)
-			pixmapList[i].append(pixmapList[i].at(j).transformed(transform));
+			pixmapList[i].append(pixmapList[i].at(j).transformed(transform)); //对每张图片旋转90度并存到list中
 	}
 
-	for(i = 0; i < MAX_PICS; i++)
+	for(i = 0; i < MAX_PICS; i++) //分配雪花内存
 	{
 		snow[i] = new SnowWidget(this);
 		snow[i]->setGeometry(-128, -128, 64, 64);
@@ -62,8 +64,8 @@ Widget::Widget(QWidget *parent) :
 		//snow[i]->show();
 	}
 
-	swing = new Swing(this, 120, 60);
-	startTimer(TIMEOUT_TIME);
+	swing = new Swing(this, 120, 60); //方向类
+	startTimer(TIMEOUT_TIME); //timer用于定时更新雪花, 实现动画效果
 }
 
 Widget::~Widget()
@@ -78,9 +80,9 @@ void Widget::timerEvent(QTimerEvent *e)
 	static int initLabel = MAX_PICS;
 	if(--timeCount <= 0)
 	{
-		qsrand(::time(NULL));
+		qsrand(::time(NULL)); //每隔一段时间, 更新随机数种子
 		timeCount = timeinit;
-		if(initLabel > 0)
+		if(initLabel > 0) //初始化雪花
 		{
 			--initLabel;
 			snow[initLabel]->move(0, -snow[initLabel]->height());
@@ -88,10 +90,10 @@ void Widget::timerEvent(QTimerEvent *e)
 	}
 
 	//swing
-	swing->Update();
+	swing->Update(); //更新方向
 
 	//action flow down
-	FlashSnow();
+	FlashSnow(); //更新雪花动画
 }
 
 void Widget::FlashSnow()
@@ -100,17 +102,17 @@ void Widget::FlashSnow()
 	for(i = 0; i < MAX_PICS; i++)
 	{
 		if(snow[i] == NULL) continue;
-		if(snow[i]->y() == -snow[i]->height())
+		if(snow[i]->y() == -snow[i]->height()) //雪花准备飘落
 		{
 			//repaint label's backgroud
-			int imgId = (qrand()%MAX_PIXMAP);
+			int imgId = (qrand()%MAX_PIXMAP); //随机选择雪花图片
 			//resize label
-			int size = (qrand()%(SnowSizeMax-SnowSizeMin))+SnowSizeMin;
-			snow[i]->SetPixmapToLabel(&(pixmapList[imgId]), size, size);
+			int size = (qrand()%(SnowSizeMax-SnowSizeMin))+SnowSizeMin; //随机选择雪花大小
+			snow[i]->SetPixmapToLabel(&(pixmapList[imgId]), size, size); //设置雪花图片组和大小
 			//qDebug()<<"init "<<QString::number(i);
 
 			//init place
-			int x = (qrand()%this->width());
+			int x = (qrand()%this->width()); //随机选择开始飘落的X坐标
 			snow[i]->move(x, 10-snow[i]->height());
 		}
 		else if(snow[i]->x() == -128) continue;  //初始化为-128
@@ -118,7 +120,7 @@ void Widget::FlashSnow()
 		{
 			//snow flow down
 			snow[i]->SetDirection(swing->GetDirection());
-			snow[i]->UpdateSnow(true);
+			//snow[i]->UpdateSnow(true);
 		}
 	}
 }

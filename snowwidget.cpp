@@ -23,6 +23,8 @@ SnowWidget::SnowWidget(QWidget *parent) :
 	Direction = Swing::NO_DIRECTION;
 	LeftEdge = RightEdge = 0;
 	TopEdge = BottomEdge = 400;
+
+	startTimer(150);
 }
 
 SnowWidget::~SnowWidget()
@@ -135,4 +137,9 @@ void SnowWidget::UpdateSnow(bool bStore)
 	}
 	this->SwapNextImageToShow();
 	this->move(downX, downY);
+}
+
+void SnowWidget::timerEvent(QTimerEvent *e)
+{
+	UpdateSnow(true);
 }
