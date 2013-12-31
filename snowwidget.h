@@ -6,8 +6,6 @@
 #include <QPixmap>
 #include <QSize>
 
-#define MAX_IMG_NUM	2
-
 namespace Ui {
 class SnowWidget;
 }
@@ -17,7 +15,11 @@ class SnowWidget : public QWidget
 	Q_OBJECT
 	
 public:
-	explicit SnowWidget(QWidget *parent = 0, int imgCount = 2);
+	explicit SnowWidget(QWidget *parent = 0,
+						int imgCount = 2,
+						bool bFlash = false,
+						unsigned int flashTimeout = 100,
+						bool bStore = false);
 	~SnowWidget();
 
 	void SetPixmapToLabel(const QList<QPixmap> &pixmapList, const QSize &pixmapSize);
@@ -32,6 +34,10 @@ public slots:
 	void SwapImageToShow(int index);
 	void SwapNextImageToShow();
 	void UpdateSnow(bool bStore = false);
+	void DirectionChanged(int direction);
+
+protected:
+	void timerEvent(QTimerEvent *e);
 	
 private:
 	Ui::SnowWidget *ui;
@@ -43,6 +49,7 @@ private:
 	int incX, incY;
 	int Direction;
 	int LeftEdge, RightEdge, TopEdge, BottomEdge;
+	bool SnowStoreOnDesktop;
 };
 
 #endif // SNOWWIDGET_H

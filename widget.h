@@ -24,8 +24,8 @@ public:
 	explicit Widget(QWidget *parent = 0);
 	~Widget();
 
-	static const qreal WINDOW_OPACITY = 0.5;
-	static const int TIMEOUT_TIME = 150;
+	static const qreal WINDOW_OPACITY = 0.7;
+	static const int TIMEOUT_TIME = 200;
 	static const int MAX_PIXMAP = 11;
 	static const int MAX_PICS = 100;
 	static const int SnowSizeMax = 64;
@@ -42,6 +42,7 @@ private:
 	SnowWidget *snow[MAX_PICS];
 	QList<QPixmap> pixmapList[MAX_PIXMAP];
 	Swing *swing;
+	bool AutoFlash;
 };
 
 #endif // WIDGET_H

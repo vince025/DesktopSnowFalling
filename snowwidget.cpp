@@ -3,19 +3,21 @@
 #include <QDebug>
 #include "swing.h"
 
-SnowWidget::SnowWidget(QWidget *parent, int imgCount) :
+SnowWidget::SnowWidget(QWidget *parent, int imgCount, bool bFlash, unsigned int flashTimeout, bool bStore) :
 	QWidget(parent),
 	ui(new Ui::SnowWidget)
 {
 	ui->setupUi(this);
 
 	int i;
-	if(imgCount <= 0) ImageCount = MAX_IMG_NUM;
+	if(imgCount <= 0) ImageCount = 0;
 	else ImageCount = imgCount;
+
 	label = new QLabel*[imgCount];
 	for(i = 0; i < ImageCount; i++)
 	{
 		label[i] = new QLabel(this);
+		label[i]->setScaledContents(true);
 		label[i]->hide();
 	}
 	DeadLine = 0;
@@ -27,6 +29,10 @@ SnowWidget::SnowWidget(QWidget *parent, int imgCount) :
 	Direction = Swing::NO_DIRECTION;
 	LeftEdge = RightEdge = 0;
 	TopEdge = BottomEdge = 400;
+
+	SnowStoreOnDesktop = bStore;
+	if(bFlash)
+		startTimer(flashTimeout);
 }
 
 SnowWidget::~SnowWidget()
@@ -52,6 +58,11 @@ void SnowWidget::SetSpeed(int min, int max)
 	MaxSpeed = max;
 	incX = MinSpeed + qrand()%(MaxSpeed-MinSpeed);
 	incY = MinSpeed + qrand()%(MaxSpeed-MinSpeed);
+}
+
+void SnowWidget::DirectionChanged(int direction)
+{
+	SetDirection(direction);
 }
 
 void SnowWidget::SetDirection(int direction)
@@ -83,18 +94,7 @@ void SnowWidget::SwapNextImageToShow()
 
 void SnowWidget::SetPixmapToLabel(const QList<QPixmap> &pixmapList, const QSize &pixmapSize)
 {
-	int i;
-	int listSize = pixmapList.size();
-	this->resize(pixmapSize);
-	for(i = 0; i < ImageCount && i < listSize; i++)
-	{
-		QPixmap map = pixmapList.at(i).scaled(pixmapSize);
-		label[i]->resize(pixmapSize);
-		label[i]->move(0, 0);
-		label[i]->setPixmap(map);
-	}
-	ImageCount = i; //可用的最大图片数或label数
-	SwapImageToShow(++ShowIndex); //必须先加再用, 最终目的是先显示第0张图片
+	SetPixmapToLabel(pixmapList, pixmapSize.width(), pixmapSize.height());
 }
 
 void SnowWidget::SetPixmapToLabel(const QList<QPixmap> &pixmapList, const int width, const int height)
@@ -104,21 +104,26 @@ void SnowWidget::SetPixmapToLabel(const QList<QPixmap> &pixmapList, const int wi
 	this->resize(width, height);
 	for(i = 0; i < ImageCount && i < listSize; i++)
 	{
-		QPixmap map = pixmapList.at(i).scaled(width, height);
+		//QPixmap map = pixmapList.at(i).scaled(width, height);
 		label[i]->resize(width, height);
 		label[i]->move(0, 0);
-		if(map.isNull())
+		if(pixmapList.at(i).isNull())
 		{
 			label[i]->setText("e");
 		}
 		else
 		{
 			label[i]->setText("");
-			label[i]->setPixmap(map);
+			label[i]->setPixmap(pixmapList.at(i));
 		}
 	}
 	ImageCount = i; //可用的最大图片数或label数
 	SwapImageToShow(++ShowIndex); //必须先加再用, 最终目的是先显示第0张图片
+}
+
+void SnowWidget::timerEvent(QTimerEvent *e)
+{
+	UpdateSnow(SnowStoreOnDesktop);
 }
 
 void SnowWidget::UpdateSnow(bool bStore)

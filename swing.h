@@ -18,6 +18,7 @@ public:
 	static const int DOWN_DIRECTION = 4;
 	
 signals:
+	void Changed(int direction);
 	
 public slots:
 	void Update();

@@ -22,6 +22,7 @@ void Swing::Update()
 	if(Strong == 0)
 	{
 		RandDirection();
+		emit Changed(Direction);
 		return;
 	}
 	Process();

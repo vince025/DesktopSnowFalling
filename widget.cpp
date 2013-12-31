@@ -53,16 +53,18 @@ Widget::Widget(QWidget *parent) :
 			pixmapList[i].append(pixmapList[i].at(j).transformed(transform));
 	}
 
+	AutoFlash = false;
+	swing = new Swing(this, 120, 60, 200);
 	for(i = 0; i < MAX_PICS; i++)
 	{
-		snow[i] = new SnowWidget(this, frame);
+		snow[i] = new SnowWidget(this, frame, AutoFlash, 200, true);
 		snow[i]->setGeometry(-128, -128, 64, 64);
 		snow[i]->SetSpeed(3, 8);
 		snow[i]->SetEdges(0, this->width(), 0, this->height());
+		connect(swing, SIGNAL(Changed(int)), snow[i], SLOT(DirectionChanged(int)));
 		//snow[i]->show();
 	}
 
-	swing = new Swing(this, 120, 60, 200);
 	startTimer(TIMEOUT_TIME);
 }
 
@@ -113,8 +115,7 @@ void Widget::FlashSnow()
 		else
 		{
 			//snow flow down
-			snow[i]->SetDirection(swing->GetDirection());
-			snow[i]->UpdateSnow(true);
+			if(!AutoFlash) snow[i]->UpdateSnow(true);
 		}
 	}
 }
